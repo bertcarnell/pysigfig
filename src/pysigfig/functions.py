@@ -1,22 +1,12 @@
-from pysigfig.Const import *
-from pysigfig.Float import *
-
-
-def _calc_lsd(value, num_sig_figs):
-    '''Calculate the least siginificant digit from the value and number of significant figures'''
-    return int(np.floor(np.log10(np.abs(value)))) - num_sig_figs + 1
-
-
-def _calc_sf(value, lsd):
-    '''Calcualte the number of significant figures from the value and least significant digit'''
-    return int(np.floor(np.log10(np.abs(value)))) - lsd + 1
+import numpy as np
+from src.pysigfig.number import Float, Const
 
 
 def _log_internal(x, value):
-    if isinstance(x, pysigfig.Float.Float):
+    if isinstance(x, Float):
         value = float(value)
-        new_sf = _calc_sf(value, -x.sf)
-        return pysigfig.Float.Float(value, new_sf)
+        new_sf = Float._calc_sf(value, -x.sf)
+        return Float(value, new_sf)
     elif isinstance(x, Const):
         return Const(value)
     else:
@@ -24,7 +14,7 @@ def _log_internal(x, value):
 
 
 def _exp_internal(base, expo):
-    if isinstance(expo, pysigfig.Float.Float):
+    if isinstance(expo, Float):
         return base**expo
     else:
         raise TypeError('exponent must be a Float object')

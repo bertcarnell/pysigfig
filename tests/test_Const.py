@@ -1,6 +1,5 @@
 from unittest import TestCase
-from pysigfig.Const import Const
-from pysigfig.Float import Float
+from src.pysigfig.number import Const, Float
 
 
 class TestConst(TestCase):
@@ -10,10 +9,13 @@ class TestConst(TestCase):
 
     def test_pow(self):
         ans = Const(10.0)**(Float("5.484"))
-        self.assertTrue(ans.sv, "3.05E+05")
+        self.assertIsInstance(ans, Float)
+        self.assertTrue(ans.str, "3.05E+05")
 
         ans = Const(10.0)**(Float("5.483"))
-        self.assertTrue(ans.sv, "3.04E+05")
+        self.assertIsInstance(ans, Float)
+        self.assertTrue(ans.str, "3.04E+05")
 
         ans = Const(10.0)**(Float("5.485"))
-        self.assertTrue(ans.sv, "3.05E+05")
+        self.assertIsInstance(ans, Float)
+        self.assertTrue(ans.str, "3.05E+05")

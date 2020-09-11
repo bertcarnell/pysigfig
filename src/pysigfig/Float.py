@@ -2,8 +2,8 @@ import re
 
 import numpy as np
 
-import pysigfig.functions as func
-import pysigfig.Const
+import src.pysigfig.functions as func
+import src.pysigfig.Const
 
 
 class Float:
