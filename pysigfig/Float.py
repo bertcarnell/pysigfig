@@ -1,7 +1,6 @@
 import re
 
 import numpy as np
-import sigfig as sf
 
 import pysigfig.functions as func
 import pysigfig.Const
@@ -42,14 +41,14 @@ class Float:
             self.v = float(value)
             self.sf = len(new_str)
             self.lsd = func._calc_lsd(self.v, self.sf)
-            rounded_value = sf.round(self.v, sigfigs=self.sf)
+            rounded_value = np.around(self.v, decimals=-self.lsd)
             self.sv = "{0:.{1:d}E}".format(float(rounded_value), (self.sf - 1))
         else:
             # convert to float so that the initialization can handle ints or floats
             self.v = float(value)
             self.sf = int(num_sig_figs)
             self.lsd = func._calc_lsd(self.v, self.sf)
-            rounded_value = sf.round(self.v, sigfigs=self.sf)
+            rounded_value = np.around(self.v, decimals=-self.lsd)
             self.sv = "{0:.{1:d}E}".format(float(rounded_value), (self.sf - 1))
 
     def __str__(self):
@@ -100,7 +99,6 @@ class Float:
 
     def __truediv__(self, other):
         return self * (~other)
-
 
     @staticmethod
     def __check_type_comparison(x):

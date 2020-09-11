@@ -63,19 +63,3 @@ class TestFloat(TestCase):
     def test_combined(self):
         ans = (Float("1.23145E4") + Float("2.11379E2")) / (Float("1.503E-2") - Float("4.6E-3"))
         self.assertEqual(ans.sv, "1.20E+06")
-"""
-ans = log10(Sigfigf.fromString("4.85E-6"))
-print(ans)
-print(ans.sv == "-5.314E+00")
-
-ans = 10.0**(Sigfigf.fromString("5.484"))
-print(ans)
-print(ans.sv == "3.05E+05")
-
-ans = 10.0**(Sigfigf.fromString("5.483"))
-print(ans)
-print(ans.sv == "3.04E+05")
-
-ans = 10.0**(Sigfigf.fromString("5.485"))
-print(ans)
-print(ans.sv == "3.05E+05")"""

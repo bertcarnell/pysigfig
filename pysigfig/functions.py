@@ -13,10 +13,10 @@ def _calc_sf(value, lsd):
 
 
 def _log_internal(x, value):
-    if isinstance(x, Float):
+    if isinstance(x, pysigfig.Float.Float):
         value = float(value)
         new_sf = _calc_sf(value, -x.sf)
-        return Float(value, new_sf)
+        return pysigfig.Float.Float(value, new_sf)
     elif isinstance(x, Const):
         return Const(value)
     else:
@@ -24,7 +24,7 @@ def _log_internal(x, value):
 
 
 def _exp_internal(base, expo):
-    if isinstance(expo, Float):
+    if isinstance(expo, pysigfig.Float.Float):
         return base**expo
     else:
         raise TypeError('exponent must be a Float object')
@@ -55,7 +55,7 @@ def exp(x):
 
 
 def exp2(x):
-    return _exp_internal(Const(np.exp(2.0)), x)
+    return _exp_internal(Const(2.0), x)
 
 
 def exp10(x):

@@ -75,19 +75,19 @@ class Const:
             return Const(self.v**other.v)
         elif isinstance(other, int):
             return Const(self.v**other)
-        elif isinstance(other, pysigfig.Float):
+        elif isinstance(other, pysigfig.Float.Float):
             # for base 10 the sig figs of the result are equal to the number of significant decimal places in the exponent
             if self.v == 10.0:
                 if other.lsd < 0:
-                    return pysigfig.Float(10.0**other.v, int(np.abs(other.lsd)))
+                    return pysigfig.Float.Float(10.0**other.v, int(np.abs(other.lsd)))
                 elif other.lsd <= 0:
-                    raise pysigfig.Float(10.0**other.v, 1)
+                    raise pysigfig.Float.Float(10.0**other.v, 1)
             else:
                 # for other bases, use the fact that the derivative of x^y is ln(x)*x^y
                 # therefore a change of z yields a change in result of z * ln(x)*x^y
                 deriv = np.log(self.v) * self.v ** other.v
-                new_sf = int(np.ceiling(other.v - np.log10(deriv * 10**other.lsd)))
-                return pysigfig.Float(self.v**other.v, new_sf)
+                new_sf = int(np.floor(other.v - np.log10(deriv * 10**other.lsd))) + 1
+                return pysigfig.Float.Float(self.v**other.v, new_sf)
         else:
             raise TypeError('only Float, Const, and int are accepted as exponents of Const')
 
