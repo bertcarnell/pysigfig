@@ -1,5 +1,5 @@
 import numpy as np
-from src.pysigfig.number import Float, Const
+from src.pysigfig.number import Const, Float
 
 
 def _log_internal(x, value):
@@ -10,14 +10,14 @@ def _log_internal(x, value):
     elif isinstance(x, Const):
         return Const(value)
     else:
-        raise TypeError('x must be a Float or Const object')
+        raise TypeError("x must be a Float or Const object")
 
 
 def _exp_internal(base, expo):
     if isinstance(expo, Float):
-        return base**expo
+        return base ** expo
     else:
-        raise TypeError('exponent must be a Float object')
+        raise TypeError("exponent must be a Float object")
 
 
 def log(x):
@@ -50,4 +50,3 @@ def exp2(x):
 
 def exp10(x):
     return _exp_internal(Const(10.0), x)
-

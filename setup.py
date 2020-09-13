@@ -22,7 +22,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires=">=3.6",
     keywords=["python", "significant", "chemistry", "physics"],
     package_dir={"": "src"},
     include_package_data=True,
@@ -36,5 +36,5 @@ setuptools.setup(
     install_requires=project_dir.joinpath("requirements.txt").read_text().split("\n"),
     zip_safe=False,
     license="MIT",
-    license_files=["LICENSE"]
+    license_files=["LICENSE"],
 )

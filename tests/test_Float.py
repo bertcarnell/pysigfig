@@ -1,5 +1,6 @@
 from unittest import TestCase
-from src.pysigfig.number import Float, Const
+
+from src.pysigfig.number import Const, Float
 
 
 class TestFloat(TestCase):

@@ -4,7 +4,6 @@ import numpy as np
 
 
 class Number:
-
     def __init__(self, value):
         self.__v = float(value)
 
@@ -14,7 +13,6 @@ class Number:
 
 
 class Float(Number):
-
     @staticmethod
     def __find_largest_lsd(x, y):
         if x.lsd > y.lsd:
@@ -33,12 +31,14 @@ class Float(Number):
 
     @staticmethod
     def _calc_lsd(value, num_sig_figs):
-        '''Calculate the least significant digit from the value and number of significant figures'''
+        """Calculate the least significant digit from the value and
+        number of significant figures"""
         return int(np.floor(np.log10(np.abs(value)))) - num_sig_figs + 1
 
     @staticmethod
     def _calc_sf(value, lsd):
-        '''Calculate the number of significant figures from the value and least significant digit'''
+        """Calculate the number of significant figures from the value and
+        least significant digit"""
         return int(np.floor(np.log10(np.abs(value)))) - lsd + 1
 
     def __init__(self, value, num_sig_figs=None):
@@ -61,7 +61,7 @@ class Float(Number):
             rounded_value = np.around(self.v, decimals=-self.__lsd)
             self.__sv = "{0:.{1:d}E}".format(float(rounded_value), (self.__sf - 1))
         else:
-            raise ValueError('Unexpected Initialization Inputs')
+            raise ValueError("Unexpected Initialization Inputs")
 
     @property
     def sf(self):
@@ -76,7 +76,10 @@ class Float(Number):
         return self.__sv
 
     def __str__(self):
-        return str("%s \t (significant figures = %i) (least significant digit = %g)\n" % (self.__sv, self.__sf, (10.0 ** self.__lsd)))
+        return str(
+            "%s \t (significant figures = %i) (least significant digit = %g)\n"
+            % (self.__sv, self.__sf, (10.0 ** self.__lsd))
+        )
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.v}, {self.__sf})"
@@ -93,7 +96,7 @@ class Float(Number):
             new_sf = Float._calc_sf(value, new_lsd)
             return Float(value, new_sf)
         else:
-            raise TypeError('only Floats and Const can be added or subtracted in pysigfig')
+            raise TypeError("only Floats and Const can be added or subtracted in pysigfig")
 
     def __neg__(self):
         value = -1.0 * self.v
@@ -115,7 +118,7 @@ class Float(Number):
             value = self.v * other.v
             return Float(value, self.__sf)
         else:
-            raise TypeError('only Float and Const can be multiplied or divided in pysigfig')
+            raise TypeError("only Float and Const can be multiplied or divided in pysigfig")
 
     def __invert__(self):
         value = 1.0 / self.v
@@ -127,11 +130,11 @@ class Float(Number):
     @staticmethod
     def __check_type_comparison(x):
         if not isinstance(x, Float):
-            raise TypeError('only Float can be compared using comparison operators in pysigfig')
+            raise TypeError("only Float can be compared using comparison operators in pysigfig")
 
     def __eq__(self, other):
         Float.__check_type_comparison(other)
-        '''Two numbers are the same if their significant digit representations are the same'''
+        """Two numbers are the same if their significant digit representations are the same"""
         return self.__sv == other.str
 
     def __ne__(self, other):
@@ -156,18 +159,19 @@ class Float(Number):
 
     def __pow__(self, other):
         if isinstance(other, Const):
-            value = self.v**other.v
+            value = self.v ** other.v
             return Float(value, self.__sf)
         elif isinstance(other, int):
-            value = self.v**other
+            value = self.v ** other
             return Float(value, self.__sf)
         elif isinstance(other, Float):
-            # interpretation is that the exponent is the number of times we will multiply the number times iteself
+            # interpretation is that the exponent is the number of times we will
+            # multiply the number times iteself
             # even if we are uncertain about the exponent, the sig figs of the base control
-            value = self.v**other.v
+            value = self.v ** other.v
             return Float(value, self.__sf)
         else:
-            raise TypeError('only Float, Const, and int are accepted as exponents of Floats')
+            raise TypeError("only Float, Const, and int are accepted as exponents of Floats")
 
     def __int__(self):
         return int(self.v)
@@ -193,7 +197,6 @@ class Float(Number):
 
 
 class Const(Number):
-
     def __init__(self, value):
         super().__init__(value)
 
@@ -231,7 +234,7 @@ class Const(Number):
     @staticmethod
     def __check_type_comparison(x):
         if not isinstance(x, Const):
-            raise TypeError('only Const can be compared using comparison operators in pysigfig')
+            raise TypeError("only Const can be compared using comparison operators in pysigfig")
 
     def __eq__(self, other):
         Const.__check_type_comparison(other)
@@ -259,24 +262,25 @@ class Const(Number):
 
     def __pow__(self, other):
         if isinstance(other, Const):
-            return Const(self.v**other.v)
+            return Const(self.v ** other.v)
         elif isinstance(other, int):
-            return Const(self.v**other)
+            return Const(self.v ** other)
         elif isinstance(other, Float):
-            # for base 10 the sig figs of the result are equal to the number of significant decimal places in the exponent
+            # for base 10 the sig figs of the result are equal to the number of
+            # significant decimal places in the exponent
             if self.v == 10.0:
                 if other.lsd < 0:
-                    return Float(10.0**other.v, int(np.abs(other.lsd)))
+                    return Float(10.0 ** other.v, int(np.abs(other.lsd)))
                 elif other.lsd <= 0:
-                    raise Float(10.0**other.v, 1)
+                    raise Float(10.0 ** other.v, 1)
             else:
                 # for other bases, use the fact that the derivative of x^y is ln(x)*x^y
                 # therefore a change of z yields a change in result of z * ln(x)*x^y
                 deriv = np.log(self.v) * self.v ** other.v
-                new_sf = int(np.floor(other.v - np.log10(deriv * 10**other.lsd))) + 1
-                return Float(self.v**other.v, new_sf)
+                new_sf = int(np.floor(other.v - np.log10(deriv * 10 ** other.lsd))) + 1
+                return Float(self.v ** other.v, new_sf)
         else:
-            raise TypeError('only Float, Const, and int are accepted as exponents of Const')
+            raise TypeError("only Float, Const, and int are accepted as exponents of Const")
 
     def __int__(self):
         return int(self.v)

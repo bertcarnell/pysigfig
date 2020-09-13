@@ -1,11 +1,10 @@
 from unittest import TestCase
 
-from src.pysigfig.number import Float
 import src.pysigfig.functions as func
+from src.pysigfig.number import Float
 
 
 class Test(TestCase):
-
     def test__log_internal(self):
         # tested inside log functions
         self.assertTrue(True)

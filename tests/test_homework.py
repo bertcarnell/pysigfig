@@ -14,7 +14,7 @@ class TestConst(TestCase):
         self.assertEqual(Float("0.00340").sf, 3)
         self.assertEqual(Float("14.600").sf, 5)
         self.assertEqual(Float("0.0001").sf, 1)
-        self.assertEqual(Float("700000").sf, 6) # package not capable
+        self.assertEqual(Float("700000").sf, 6)  # package not capable
         self.assertEqual(Float("7E+05").sf, 1)
         self.assertEqual(Float("350.670").sf, 6)
         self.assertEqual(Float("1.0000").sf, 5)
@@ -49,4 +49,3 @@ class TestConst(TestCase):
         self.assertEqual(Float("57") * Float("7.368"), Float("4.2E+02"))
         self.assertEqual(Float("8.578") / Float("4.33821"), Float("1.977"))
         self.assertEqual(Float("6.90") / Float("2.8952"), Float("2.38"))
-
