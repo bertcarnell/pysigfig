@@ -2,19 +2,46 @@ import re
 
 import numpy as np
 
+from typing import Union, Optional
+
 
 class Number:
-    def __init__(self, value):
+    """
+    Base class for both Floats with significant figures and Const
+    """
+
+    def __init__(self, value: Union[int, float, str]):
+        """
+        Initialize Number
+        :param value: internal number value
+        """
         self.__v = float(value)
 
     @property
     def v(self):
+        """
+        Value Property
+        :return: value
+        :rtype: float
+        """
         return self.__v
 
 
 class Float(Number):
+    """
+    A number with significant figures
+    """
+
     @staticmethod
-    def __find_largest_lsd(x, y):
+    def __find_largest_lsd(x, y) -> int:
+        """
+        Find the largest 'least significant digit' between two Floats
+        :param x: fist Float
+        :type x: Float
+        :param y: second Float
+        :type y: Float
+        :return: largest least significant digits
+        """
         if x.lsd > y.lsd:
             new_lsd = x.lsd
         else:
@@ -22,7 +49,15 @@ class Float(Number):
         return new_lsd
 
     @staticmethod
-    def __find_smallest_sf(x, y):
+    def __find_smallest_sf(x, y) -> int:
+        """
+        Find the smallest significant figures between two Floats
+        :param x: first Float
+        :type x: Float
+        :param y: second Float
+        :type y: Float
+        :return: smallest significant figures
+        """
         if x.sf > y.sf:
             new_sf = y.sf
         else:
@@ -30,18 +65,31 @@ class Float(Number):
         return new_sf
 
     @staticmethod
-    def _calc_lsd(value, num_sig_figs):
-        """Calculate the least significant digit from the value and
-        number of significant figures"""
+    def _calc_lsd(value: float, num_sig_figs: int) -> int:
+        """
+        Calculate the least significant digit from the value and number of significant figures
+        :param value: The Float value
+        :param num_sig_figs: the number of significant figures
+        :return: the power of 10 of the least significant digit
+        """
         return int(np.floor(np.log10(np.abs(value)))) - num_sig_figs + 1
 
     @staticmethod
-    def _calc_sf(value, lsd):
-        """Calculate the number of significant figures from the value and
-        least significant digit"""
+    def _calc_sf(value: float, lsd: int) -> int:
+        """
+        Calculate the number of significant figures from the value and least significant digit
+        :param value: The Float value
+        :param lsd: the power of 10 of the least significant digit
+        :return: the number of significant figures
+        """
         return int(np.floor(np.log10(np.abs(value)))) - lsd + 1
 
-    def __init__(self, value, num_sig_figs=None):
+    def __init__(self, value: float, num_sig_figs: Optional[int] = None):
+        """
+        Initialize a Float
+        :param value: the value of the Float
+        :param num_sig_figs: the number of significant figures or None
+        """
         super().__init__(value)
         if isinstance(value, str) & (num_sig_figs is None):
             # if exponential 2.3450E1223
@@ -64,15 +112,18 @@ class Float(Number):
             raise ValueError("Unexpected Initialization Inputs")
 
     @property
-    def sf(self):
+    def sf(self) -> int:
+        """Significant figure property"""
         return self.__sf
 
     @property
-    def lsd(self):
+    def lsd(self) -> int:
+        """Power of 10 of the least significant digit"""
         return self.__lsd
 
     @property
-    def str(self):
+    def str(self) -> str:
+        """String representation of the number using significant figures"""
         return self.__sv
 
     def __str__(self):
@@ -85,6 +136,7 @@ class Float(Number):
         return f"{self.__class__.__name__}({self.v}, {self.__sf})"
 
     def __add__(self, other):
+        """Addition"""
         if isinstance(other, Float):
             value = self.v + other.v
             new_lsd = Float.__find_largest_lsd(self, other)
@@ -99,17 +151,21 @@ class Float(Number):
             raise TypeError("only Floats and Const can be added or subtracted in pysigfig")
 
     def __neg__(self):
+        """Negation"""
         value = -1.0 * self.v
         return Float(value, self.__sf)
 
     def __abs__(self):
+        """Absolute Value"""
         value = np.abs(self.v)
         return Float(value, self.__sf)
 
     def __sub__(self, other):
+        """Subtraction"""
         return self + (-other)
 
     def __mul__(self, other):
+        """Mutliplication"""
         if isinstance(other, Float):
             value = self.v * other.v
             new_sf = Float.__find_smallest_sf(self, other)
@@ -121,43 +177,53 @@ class Float(Number):
             raise TypeError("only Float and Const can be multiplied or divided in pysigfig")
 
     def __invert__(self):
+        """Inversion"""
         value = 1.0 / self.v
         return Float(value, self.__sf)
 
     def __truediv__(self, other):
+        """Double precision division"""
         return self * (~other)
 
     @staticmethod
     def __check_type_comparison(x):
+        """Check for object type (Internal)"""
         if not isinstance(x, Float):
             raise TypeError("only Float can be compared using comparison operators in pysigfig")
 
     def __eq__(self, other):
+        """Equality"""
         Float.__check_type_comparison(other)
-        """Two numbers are the same if their significant digit representations are the same"""
+        # Two numbers are the same if their significant digit representations are the same
         return self.__sv == other.str
 
     def __ne__(self, other):
+        """Not Equal"""
         Float.__check_type_comparison(other)
         return self.__sv != other.str
 
     def __lt__(self, other):
+        """Less than"""
         Float.__check_type_comparison(other)
         return (self.v < other.v) & (self.__sv != other.str)
 
     def __gt__(self, other):
+        """Greater than"""
         Float.__check_type_comparison(other)
         return (self.v > other.v) & (self.__sv != other.str)
 
     def __le__(self, other):
+        """Less than or equal to"""
         Float.__check_type_comparison(other)
         return (self.v < other.v) | (self.__sv == other.str)
 
     def __ge__(self, other):
+        """Greater than or equal to"""
         Float.__check_type_comparison(other)
         return (self.v > other.v) | (self.__sv == other.str)
 
     def __pow__(self, other):
+        """Power (**)"""
         if isinstance(other, Const):
             value = self.v ** other.v
             return Float(value, self.__sf)
@@ -174,30 +240,40 @@ class Float(Number):
             raise TypeError("only Float, Const, and int are accepted as exponents of Floats")
 
     def __int__(self):
+        """Integer conversion"""
         return int(self.v)
 
     def __float__(self):
+        """float conversion"""
         return self.v
 
     def __iadd__(self, other):
+        """Increment by addition"""
         new_float = self + other
         self.__init__(new_float.v, new_float.sf)
 
     def __imul__(self, other):
+        """Increment by multiplication"""
         new_float = self * other
         self.__init__(new_float.v, new_float.sf)
 
     def __itruediv__(self, other):
+        """Increment by division"""
         new_float = self / other
         self.__init__(new_float.v, new_float.sf)
 
     def __isub__(self, other):
+        """Increment by subtraction"""
         new_float = self - other
         self.__init__(new_float.v, new_float.sf)
 
 
 class Const(Number):
-    def __init__(self, value):
+    """
+    An exact number with infinite significant figures
+    """
+
+    def __init__(self, value: Union[int, float]):
         super().__init__(value)
 
     def __str__(self):
@@ -207,60 +283,91 @@ class Const(Number):
         return f"{self.__class__.__name__}({self.v})"
 
     def __add__(self, other):
-        # Const + Float = Float + Const
-        return other + self
+        """Addition"""
+        if isinstance(other, Float):
+            # Const + Float = Float + Const
+            return other + self
+        elif isinstance(other, Const):
+            return Const(self.v + other.v)
+        else:
+            raise TypeError("Only Const and Float can be added")
 
     def __neg__(self):
+        """Negation"""
         return Const(-1.0 * self.v)
 
     def __abs__(self):
+        """Absolute Value"""
         return Const(np.abs(self.v))
 
     def __sub__(self, other):
-        # Const - Float = -Float + Const
-        return (-other) + self
+        """Subtraction"""
+        if isinstance(other, Float):
+            # Const - Float = -Float + Const
+            return (-other) + self
+        else:
+            return self + (-other)
 
     def __mul__(self, other):
-        # Const * Float = Float * Const
-        return other * self
+        """Multiplication"""
+        if isinstance(other, Float):
+            # Const * Float = Float * Const
+            return other * self
+        elif isinstance(other, Const):
+            return Const(self.v * other.v)
+        else:
+            raise TypeError("Only Const and Float can be multiplied")
 
     def __invert__(self):
+        """Inversion"""
         return Const(1.0 / self.v)
 
     def __truediv__(self, other):
-        # Const / Float = (1/Float) * Const
-        return (~other) * other
+        """Double precision division"""
+        if isinstance(other, Float):
+            # Const / Float = (1/Float) * Const
+            return (~other) * self
+        else:
+            return self * (~other)
 
     @staticmethod
     def __check_type_comparison(x):
+        """Type checking for comparison operators"""
         if not isinstance(x, Const):
             raise TypeError("only Const can be compared using comparison operators in pysigfig")
 
     def __eq__(self, other):
+        """Equality"""
         Const.__check_type_comparison(other)
         return self.v == other.v
 
     def __ne__(self, other):
+        """Not equal"""
         Const.__check_type_comparison(other)
         return self.v != other.v
 
     def __lt__(self, other):
+        """Less than"""
         Const.__check_type_comparison(other)
         return self.v < other.v
 
     def __gt__(self, other):
+        """Greater than"""
         Const.__check_type_comparison(other)
         return self.v > other.v
 
     def __le__(self, other):
+        """Less than or Equal to"""
         Const.__check_type_comparison(other)
         return self.v <= other.v
 
     def __ge__(self, other):
+        """Greater than or Equal to"""
         Const.__check_type_comparison(other)
         return self.v >= other.v
 
     def __pow__(self, other):
+        """Power (**)"""
         if isinstance(other, Const):
             return Const(self.v ** other.v)
         elif isinstance(other, int):
@@ -283,23 +390,29 @@ class Const(Number):
             raise TypeError("only Float, Const, and int are accepted as exponents of Const")
 
     def __int__(self):
+        """Integer Conversion"""
         return int(self.v)
 
     def __float__(self):
+        """float conversion"""
         return self.v
 
     def __iadd__(self, other):
+        """Increment by addition"""
         new_float = self + other
         self.__init__(new_float.v)
 
     def __imul__(self, other):
+        """Increment by multiplication"""
         new_float = self * other
         self.__init__(new_float.v)
 
     def __itruediv__(self, other):
+        """Increment by division"""
         new_float = self / other
         self.__init__(new_float.v)
 
     def __isub__(self, other):
+        """Increment by subtraction"""
         new_float = self - other
         self.__init__(new_float.v)
