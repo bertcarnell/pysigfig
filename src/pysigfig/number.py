@@ -1,26 +1,23 @@
 import re
+from typing import Optional, Union
 
 import numpy as np
 
-from typing import Union, Optional
-
 
 class Number:
-    """
-    Base class for both Floats with significant figures and Const
-    """
+    """Base class for both Floats with significant figures and Const"""
 
     def __init__(self, value: Union[int, float, str]):
-        """
-        Initialize Number
+        """Initialize Number
+
         :param value: internal number value
         """
         self.__v = float(value)
 
     @property
     def v(self):
-        """
-        Value Property
+        """Value Property
+
         :return: value
         :rtype: float
         """
@@ -28,14 +25,12 @@ class Number:
 
 
 class Float(Number):
-    """
-    A number with significant figures
-    """
+    """A number with significant figures"""
 
     @staticmethod
     def __find_largest_lsd(x, y) -> int:
-        """
-        Find the largest 'least significant digit' between two Floats
+        """Find the largest 'least significant digit' between two Floats
+
         :param x: fist Float
         :type x: Float
         :param y: second Float
@@ -50,8 +45,8 @@ class Float(Number):
 
     @staticmethod
     def __find_smallest_sf(x, y) -> int:
-        """
-        Find the smallest significant figures between two Floats
+        """Find the smallest significant figures between two Floats
+
         :param x: first Float
         :type x: Float
         :param y: second Float
@@ -66,8 +61,8 @@ class Float(Number):
 
     @staticmethod
     def _calc_lsd(value: float, num_sig_figs: int) -> int:
-        """
-        Calculate the least significant digit from the value and number of significant figures
+        """Calculate the least significant digit from the value and number of significant figures
+
         :param value: The Float value
         :param num_sig_figs: the number of significant figures
         :return: the power of 10 of the least significant digit
@@ -76,28 +71,31 @@ class Float(Number):
 
     @staticmethod
     def _calc_sf(value: float, lsd: int) -> int:
-        """
-        Calculate the number of significant figures from the value and least significant digit
+        """Calculate the number of significant figures from the value and least significant digit
+
         :param value: The Float value
         :param lsd: the power of 10 of the least significant digit
         :return: the number of significant figures
         """
         return int(np.floor(np.log10(np.abs(value)))) - lsd + 1
 
-    def __init__(self, value: float, num_sig_figs: Optional[int] = None):
-        """
-        Initialize a Float
+    def __init__(self, value: Union[str, float], num_sig_figs: Optional[int] = None):
+        """Initialize a Float
+
         :param value: the value of the Float
         :param num_sig_figs: the number of significant figures or None
         """
+        # super().__init__ checks that the value is convertible to a float
         super().__init__(value)
         if isinstance(value, str) & (num_sig_figs is None):
             # if exponential 2.3450E1223
-            is_exponential = re.match("[-0-9.]*[Ee][0-9+-]*", value)
+            # need to help the mypy type checker
+            str_value = str(value)
+            is_exponential = re.match("[-0-9.]*[Ee][0-9+-]*", str_value)
             if is_exponential:
-                new_str = (value.split("E"))[0].replace("-", "").replace(".", "")
+                new_str = (str_value.split("E"))[0].replace("-", "").replace(".", "")
             else:
-                new_str = re.sub("^[0.]*", "", value).replace(".", "")
+                new_str = re.sub("^[0.]*", "", str_value).replace(".", "")
             self.__sf = len(new_str)
             self.__lsd = Float._calc_lsd(self.v, self.__sf)
             rounded_value = np.around(self.v, decimals=-self.__lsd)
@@ -269,9 +267,7 @@ class Float(Number):
 
 
 class Const(Number):
-    """
-    An exact number with infinite significant figures
-    """
+    """An exact number with infinite significant figures"""
 
     def __init__(self, value: Union[int, float]):
         super().__init__(value)

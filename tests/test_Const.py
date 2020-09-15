@@ -1,5 +1,4 @@
 import pytest
-
 from src.pysigfig.number import Const, Float
 
 

@@ -1,5 +1,4 @@
 import pytest
-
 from src.pysigfig.number import Float
 
 
@@ -24,7 +23,7 @@ def test_homework1():
     assert Float("658.0") + Float("23.5478") + Float("1345.29") == Float("2026.8")
 
     assert Float("23.7") * Float("3.8") == Float("90.")
-    assert Float("45.76") * Float("0.25")== Float("11")
+    assert Float("45.76") * Float("0.25") == Float("11")
     assert Float("81.04") * Float("0.010") == Float("0.81")
     assert Float("6.47") * Float("64.5") == Float("417")
     assert Float("43.678") * Float("64.1") == Float("2.80E+03")
@@ -41,6 +40,8 @@ def test_homework2():
     assert Float("4032.090").sf == 7
 
     assert Float("34.683") + Float("58.930") + Float("68.35112") == Float("161.964")
+    x = Float("34.683") + Float("58.930") + Float("68.35112")
+    assert x.v == pytest.approx(34.683 + 58.930 + 68.35112)
     assert Float("45001") - Float("56.355") - Float("78.44") == Float("44866")
     assert Float("0.003") + Float("3.5198") + Float("0.0118") == Float("3.535")
     assert Float("36.01") - Float("0.4") - Float("15") == Float("21")

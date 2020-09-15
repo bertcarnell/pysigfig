@@ -1,5 +1,4 @@
 import pytest
-
 import src.pysigfig.functions as func
 from src.pysigfig.number import Float
 
@@ -16,6 +15,9 @@ def test__exp_internal():
 
 def test_log():
     assert func.log(Float("10.0")).str == "2.303E+00"
+
+    with pytest.raises(TypeError):
+        func.log("a")
 
 
 def test_ln():

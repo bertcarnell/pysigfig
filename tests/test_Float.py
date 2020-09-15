@@ -1,5 +1,4 @@
 import pytest
-
 from src.pysigfig.number import Const, Float
 
 
@@ -166,26 +165,26 @@ def test_combined():
 
 
 def test_pow():
-    x = Float(1.23, 3)**3
-    assert x.v == 1.23**3
+    x = Float(1.23, 3) ** 3
+    assert x.v == 1.23 ** 3
     assert x.sf == 3
 
-    x = Float(1.23, 3)**Float(3.0, 2)
-    assert x.v == 1.23**3.0
+    x = Float(1.23, 3) ** Float(3.0, 2)
+    assert x.v == 1.23 ** 3.0
     assert x.sf == 3
 
-    x = Float(1.23, 3)**Const(3.0)
-    assert x.v == 1.23**3.0
+    x = Float(1.23, 3) ** Const(3.0)
+    assert x.v == 1.23 ** 3.0
     assert x.sf == 3
 
     with pytest.raises(TypeError):
-        Float("1.23")**"abc"
+        Float("1.23") ** "abc"
 
     with pytest.raises(TypeError):
-        "abc"**Float(1.23, num_sig_figs=3)
+        "abc" ** Float(1.23, num_sig_figs=3)
 
     with pytest.raises(TypeError):
-        Float("1.23")**5.1
+        Float("1.23") ** 5.1
 
     with pytest.raises(TypeError):
-        5.1**Float("1.23")
+        5.1 ** Float("1.23")

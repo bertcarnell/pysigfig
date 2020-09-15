@@ -1,12 +1,22 @@
-import numpy as np
-
-from src.pysigfig.number import Const, Float
 from typing import Union
+
+import numpy as np
+from src.pysigfig.number import Const, Float
+
+
+def _type_check_internal(x: Union[Const, Float]):
+    """Internal type checking function
+
+    :param x: the object
+    :return: None
+    """
+    if not (isinstance(x, Float) | isinstance(x, Const)):
+        raise TypeError("x must be a Float or Const object")
 
 
 def _log_internal(x: Union[Const, Float], value: float) -> Union[Const, Float]:
-    """
-    Internal logarithm function
+    """Internal logarithm function
+
     :param x: the object
     :param value: the pre-computed logged value
     :return: the new logged object
@@ -22,8 +32,8 @@ def _log_internal(x: Union[Const, Float], value: float) -> Union[Const, Float]:
 
 
 def _exp_internal(base: Union[Const, Float], expo: Float) -> Union[Const, Float]:
-    """
-    Internal exponentiation helper
+    """Internal exponentiation helper
+
     :param base: The base of the exponent
     :param expo: The exponent
     :return: The resulting number
@@ -35,72 +45,80 @@ def _exp_internal(base: Union[Const, Float], expo: Float) -> Union[Const, Float]
 
 
 def log(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Natural logarithm
+    """Natural logarithm
+
     :param x: value to be logged
     :return: the result
     """
+    _type_check_internal(x)
     return _log_internal(x, np.log(x.v))
 
 
 def ln(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Natural logarithm
+    """Natural logarithm
+
     :param x: value to be logged
     :return: the result
     """
+    _type_check_internal(x)
     return _log_internal(x, np.log(x.v))
 
 
 def log10(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Base 10 logarithm
+    """Base 10 logarithm
+
     :param x: value to be logged
     :return: the result
     """
+    _type_check_internal(x)
     return _log_internal(x, np.log10(x.v))
 
 
 def log2(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Base 2 logarithm
+    """Base 2 logarithm
+
     :param x: value to be logged
     :return: the result
     """
+    _type_check_internal(x)
     return _log_internal(x, np.log2(x.v))
 
 
 def log1p(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Natural logarithm of 1 plus x
+    """Natural logarithm of 1 plus x
+
     :param x: value to be logged
     :return: the result
     """
+    _type_check_internal(x)
     return _log_internal(x, np.log1p(x.v))
 
 
 def exp(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Exponential
+    """Exponential
+
     :param x: Exponent value
     :return: the result
     """
+    _type_check_internal(x)
     return _exp_internal(Const(np.exp(1.0)), x)
 
 
 def exp2(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Base 2 Exponential
+    """Base 2 Exponential
+
     :param x: Exponent value
     :return: the result
     """
+    _type_check_internal(x)
     return _exp_internal(Const(2.0), x)
 
 
 def exp10(x: Union[Const, Float]) -> Union[Const, Float]:
-    """
-    Base 10 Exponential
+    """Base 10 Exponential
+
     :param x: Exponent value
     :return: the result
     """
+    _type_check_internal(x)
     return _exp_internal(Const(10.0), x)
