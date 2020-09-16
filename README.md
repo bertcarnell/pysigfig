@@ -2,6 +2,7 @@
 A package for creating and manipulating floating point numbers accounting for significant figures
 
 ![Python package](https://github.com/bertcarnell/pysigfig/workflows/Python%20package/badge.svg)
+[![PyPI version](https://badge.fury.io/py/pysigfig.svg)](https://pypi.org/project/pysigfig/)
 
 ## Quickstart
 
