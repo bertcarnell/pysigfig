@@ -30,7 +30,11 @@ area = pysf.Const(math.pi) * pysf.Float("2.0")**2
 print(area)
 ```
 
-### Methods of Entry
+### References
+
+For a simple overview of arithmetic with significant figures, see the [Wikipedia Page](https://en.wikipedia.org/wiki/Significance_arithmetic).
+
+## Methods of Entry
 
 ```{python}
 # Enter a floating point number and specify the number of significant digits
@@ -47,4 +51,14 @@ pysf.Float("1.0E+06") # 2 sig figs
 # Enter a constant
 pysf.Const(2)
 pysf.Const(math.pi)
+```
+
+### Limitations
+
+`pysigfig` cannot accept a string like "100000" and assign only one significant digit to it.  However, this can be entered in scientific notation or as a float.
+
+```{python}
+# Enter 100000 with 1 significant figure
+pysf.Float("1E+05")
+pysf.Float(100000, 1)
 ```
