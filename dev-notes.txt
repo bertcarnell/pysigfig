@@ -1,0 +1,58 @@
+In the pycharm terminal...
+
+conda create --name pysigfig_dev_env
+conda activate pysigfig_dev_env
+
+python -m pip install --upgrade pip setuptools wheel
+
+python -m pip install pip-tools
+python -m pip-compile --upgrade
+pip-compile --upgrade dev-requirements.in
+
+------------------------------------
+
+from pysigfig project directory
+
+sudo apt-get update
+sudo apt-get upgrade
+
+# only needed once
+sudo apt-get install python3-pip python3-venv
+
+python3 -m venv venv
+source venv/bin/activate
+
+python -m pip install --upgrade pip setuptools wheel numpy pytest pip-tools twine
+
+pip-compile --upgrade
+pip-compile --upgrade dev-requirements.in
+
+python -m pytest
+
+pip-sync requirements.txt dev-requirements.txt
+
+python setup.py sdist bdist_wheel
+
+twine check dist/*
+python3 -m twine upload --repository testpypi dist/*
+
+flake8 src/*.py
+black src/*.py
+isort src/*.py
+
+deactivate
+
+---------------------------------------
+
+python3 -m venv venv_test
+source venv_test/bin/activate
+
+python -m pip install numpy
+python -m pip install --index-url https://test.pypi.org/project/ pysigfig
+
+python3
+import pysigfig.number as pysf
+pysf.Float("1.234")
+
+deactivate
+

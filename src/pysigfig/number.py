@@ -67,7 +67,10 @@ class Float(Number):
         :param num_sig_figs: the number of significant figures
         :return: the power of 10 of the least significant digit
         """
-        return int(np.floor(np.log10(np.abs(value)))) - num_sig_figs + 1
+        if value == 0:
+            return 1 - num_sig_figs
+        else:
+            return int(np.floor(np.log10(np.abs(value)))) - num_sig_figs + 1
 
     @staticmethod
     def _calc_sf(value: float, lsd: int) -> int:
@@ -95,7 +98,7 @@ class Float(Number):
             if is_exponential:
                 new_str = (str_value.split("E"))[0].replace("-", "").replace(".", "")
             else:
-                new_str = re.sub("^[0.]*", "", str_value).replace(".", "")
+                new_str = re.sub("^[-0.]*", "", str_value).replace(".", "")
             self.__sf = len(new_str)
             self.__lsd = Float._calc_lsd(self.v, self.__sf)
             rounded_value = np.around(self.v, decimals=-self.__lsd)
@@ -125,6 +128,10 @@ class Float(Number):
         return self.__sv
 
     def __str__(self):
+        return self.__sv
+
+    def verbose(self) -> str:
+        """A verbose string representation"""
         return str(
             "%s \t (significant figures = %i) (least significant digit = %g)\n"
             % (self.__sv, self.__sf, (10.0 ** self.__lsd))
@@ -273,6 +280,10 @@ class Const(Number):
         super().__init__(value)
 
     def __str__(self):
+        return str("%g" % self.v)
+
+    def verbose(self) -> str:
+        """A verbose string representation"""
         return str("%g \t (constant)\n" % self.v)
 
     def __repr__(self):
