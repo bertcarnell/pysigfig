@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pysigfig",
-    version="0.0.1",
+    version="0.0.2",
     author="Rob Carnell",
     author_email="bertcarnell@gmail.com",
     description="A package for creating and manipulating floating point numbers accounting for significant figures",
