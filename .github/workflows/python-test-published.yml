@@ -29,4 +29,4 @@ jobs:
         python -m pip install pysigfig
     - name: Test Normal Operations
       run: |
-        python -c "import math; import pysigfig; x = Float('1.23'); y = Float('4.5'); print(x + y); print(x * y); print(x - y); print(x / y)"
+        python -c "import math; import pysigfig as pysf; x = pysf.Float('1.23'); y = pysf.Float('4.5'); print(x + y); print(x * y); print(x - y); print(x / y)"
